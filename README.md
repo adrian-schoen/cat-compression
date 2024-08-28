@@ -20,7 +20,7 @@ Ensure you have Python installed. This project is compatible with Python 3.x.
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/CatCompression.git
+   git clone https://github.com/adrian-schoen/cat-compression/
    cd CatCompression
    ```
 
