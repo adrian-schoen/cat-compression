@@ -34,30 +34,36 @@ def compress_and_attach(input_file, png_file, output_file):
 
 def extract_and_decompress(input_file, output_file):
     extracted_file = 'temp_extracted.catc'
+    print(f"Extracting .catc file from '{input_file}' to '{extracted_file}'")
     extract_catc_from_png(input_file, extracted_file)
+    if not os.path.exists(extracted_file):
+        print(f"Error: Extracted file '{extracted_file}' does not exist.")
+        return
     decompress_file(extracted_file, output_file)
     os.remove(extracted_file)
 
 def main():
     parser = argparse.ArgumentParser(description="CatCompression - Custom File Compression Tool")
     parser.add_argument('mode', choices=['catcompress', 'catextract'], help="Mode: catcompress or catextract")
-    parser.add_argument('input_file', help="Input file path")
-    parser.add_argument('output_file', help="Output file path")
-    parser.add_argument('--png_file', help="PNG file path for catcompress mode")
+    parser.add_argument('input_folder', help="Input folder path")
+    parser.add_argument('output_folder', help="Output folder path")
+    parser.add_argument('cat_folder', help="Cat folder path containing cat.png")
 
     args = parser.parse_args()
 
     if args.mode == 'catcompress':
-        if args.png_file is None:
-            print("Error: --png_file is required for catcompress mode.")
-            return
-        compress_and_attach(args.input_file, args.png_file, args.output_file)
+        input_file = os.path.join(args.input_folder, 'input.txt')
+        output_file = os.path.join(args.output_folder, 'output_with_catc.png')
+        png_file = os.path.join(args.cat_folder, 'cat.png')
+        compress_and_attach(input_file, png_file, output_file)
     elif args.mode == 'catextract':
-        extract_and_decompress(args.input_file, args.output_file)
+        input_file = os.path.join(args.input_folder, 'output_with_catc.png')
+        output_file = os.path.join(args.output_folder, 'decompressed_output.txt')
+        extract_and_decompress(input_file, output_file)
 
 if __name__ == "__main__":
     main()
 
-# python main.py catcompress input.txt output_with_catc.png --png_file cat.png
-
-# python main.py catextract output_with_catc.png decompressed_output.txt
+# Example usage:
+# python main.py catcompress input output cat
+# python main.py catextract input output cat
