@@ -40,25 +40,14 @@ def extract_and_decompress(input_file, output_file):
 
 def main():
     parser = argparse.ArgumentParser(description="CatCompression - Custom File Compression Tool")
-    parser.add_argument('mode', choices=['compress', 'decompress', 'attach', 'extract', 'compress_attach', 'extract_decompress'], help="Mode: compress, decompress, attach, extract, compress_attach, or extract_decompress")
+    parser.add_argument('mode', choices=['compress_attach', 'extract_decompress'], help="Mode: compress_attach or extract_decompress")
     parser.add_argument('input_file', help="Input file path")
     parser.add_argument('output_file', help="Output file path")
-    parser.add_argument('--png_file', help="PNG file path for attach or compress_attach mode")
+    parser.add_argument('--png_file', help="PNG file path for compress_attach mode")
 
     args = parser.parse_args()
 
-    if args.mode == 'compress':
-        compress_file(args.input_file, args.output_file)
-    elif args.mode == 'decompress':
-        decompress_file(args.input_file, args.output_file)
-    elif args.mode == 'attach':
-        if args.png_file is None:
-            print("Error: --png_file is required for attach mode.")
-            return
-        attach_to_png(args.png_file, args.input_file, args.output_file)
-    elif args.mode == 'extract':
-        extract_catc_from_png(args.input_file, args.output_file)
-    elif args.mode == 'compress_attach':
+    if args.mode == 'compress_attach':
         if args.png_file is None:
             print("Error: --png_file is required for compress_attach mode.")
             return
