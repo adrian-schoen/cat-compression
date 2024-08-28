@@ -1,6 +1,6 @@
 # CatCompression
 
-CatCompression is a custom file compression tool that utilizes Huffman coding to compress files and embed the compressed data into a PNG image. The tool also supports extracting and decompressing the data from the PNG image. The project is designed to efficiently compress data and conveniently hide it within an image file.
+CatCompression is a specialized file compression tool that employs Huffman coding to efficiently compress files and seamlessly embed the compressed data within a PNG image of a cat. This innovative tool not only facilitates the compression process but also allows for easy extraction and decompression of the data from the PNG image. Designed for both efficiency and convenience, CatCompression offers a unique way to store data discreetly within a charming cat image file.
 
 ## Features
 
