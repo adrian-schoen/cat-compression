@@ -1,7 +1,8 @@
 import argparse
 from huffman import HuffmanCompressor
-from utils import read_file, write_file
+from utils import read_file, write_file, attach_to_png, extract_catc_from_png
 import pickle
+
 
 def compress_file(input_file, output_file):
     """
@@ -41,12 +42,13 @@ def decompress_file(input_file, output_file):
 
 def main():
     """
-    Main function to handle command-line arguments and perform compression or decompression.
+    Main function to handle command-line arguments and perform compression, decompression, attachment, or extraction.
     """
     parser = argparse.ArgumentParser(description="CatCompression - Custom File Compression Tool")
-    parser.add_argument('mode', choices=['compress', 'decompress'], help="Mode: compress or decompress")
+    parser.add_argument('mode', choices=['compress', 'decompress', 'attach', 'extract'], help="Mode: compress, decompress, attach, or extract")
     parser.add_argument('input_file', help="Input file path")
     parser.add_argument('output_file', help="Output file path")
+    parser.add_argument('--png_file', help="PNG file path for attach mode")
 
     args = parser.parse_args()
 
@@ -54,6 +56,13 @@ def main():
         compress_file(args.input_file, args.output_file)
     elif args.mode == 'decompress':
         decompress_file(args.input_file, args.output_file)
+    elif args.mode == 'attach':
+        if args.png_file is None:
+            print("Error: --png_file is required for attach mode.")
+            return
+        attach_to_png(args.png_file, args.input_file, args.output_file)
+    elif args.mode == 'extract':
+        extract_catc_from_png(args.input_file, args.output_file)
 
 if __name__ == "__main__":
     main()
