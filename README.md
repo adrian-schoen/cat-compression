@@ -1,5 +1,11 @@
 # CatCompression
 
+## Work in Progress
+
+**Disclaimer:** This project is currently a work in progress. Features and functionality may change as development continues. Please check back for updates!
+
+---
+
 CatCompression is a specialized file compression tool that employs Huffman coding to efficiently compress files and seamlessly embed the compressed data within a PNG image of a cat. This innovative tool not only facilitates the compression process but also allows for easy extraction and decompression of the data from the PNG image. Designed for both efficiency and convenience, CatCompression offers a unique way to store data discreetly within a charming cat image file.
 
 ## Features
