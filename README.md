@@ -1,7 +1,7 @@
 # cat-compression
 
-compress into .png
-# python main.py compress_attach input.txt output_with_catc.png --png_file cat.png
+compress into .png:
+python main.py catcompress input.txt output_with_catc.png --png_file cat.png
 
 decompress from .png
-# python main.py extract_decompress output_with_catc.png decompressed_output.txt
+python main.py catextract output_with_catc.png decompressed_output.txt

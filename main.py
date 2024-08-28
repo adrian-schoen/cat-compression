@@ -40,24 +40,24 @@ def extract_and_decompress(input_file, output_file):
 
 def main():
     parser = argparse.ArgumentParser(description="CatCompression - Custom File Compression Tool")
-    parser.add_argument('mode', choices=['compress_attach', 'extract_decompress'], help="Mode: compress_attach or extract_decompress")
+    parser.add_argument('mode', choices=['catcompress', 'catextract'], help="Mode: catcompress or catextract")
     parser.add_argument('input_file', help="Input file path")
     parser.add_argument('output_file', help="Output file path")
-    parser.add_argument('--png_file', help="PNG file path for compress_attach mode")
+    parser.add_argument('--png_file', help="PNG file path for catcompress mode")
 
     args = parser.parse_args()
 
-    if args.mode == 'compress_attach':
+    if args.mode == 'catcompress':
         if args.png_file is None:
-            print("Error: --png_file is required for compress_attach mode.")
+            print("Error: --png_file is required for catcompress mode.")
             return
         compress_and_attach(args.input_file, args.png_file, args.output_file)
-    elif args.mode == 'extract_decompress':
+    elif args.mode == 'catextract':
         extract_and_decompress(args.input_file, args.output_file)
 
 if __name__ == "__main__":
     main()
 
-# python main.py compress_attach input.txt output_with_catc.png --png_file cat.png
+# python main.py catcompress input.txt output_with_catc.png --png_file cat.png
 
-# python main.py extract_decompress output_with_catc.png decompressed_output.txt
+# python main.py catextract output_with_catc.png decompressed_output.txt
