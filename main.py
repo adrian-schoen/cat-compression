@@ -4,9 +4,19 @@ import pickle
 from huffman import HuffmanCompressor
 from utils import read_file, write_file, attach_to_png, extract_catc_from_png
 
+# Separator used to distinguish between different files in the concatenated data
 FILE_SEPARATOR = b'FILE_SEPARATOR'
 
 def compress_files(input_folder):
+    """
+    Compress all .txt files in the input folder using Huffman compression.
+    
+    Args:
+        input_folder (str): Path to the folder containing .txt files to compress.
+    
+    Returns:
+        list: A list of tuples containing filename, compressed data, and Huffman tree.
+    """
     compressed_files = []
     compressor = HuffmanCompressor()
     
@@ -20,6 +30,15 @@ def compress_files(input_folder):
     return compressed_files
 
 def concatenate_compressed_files(compressed_files):
+    """
+    Concatenate compressed files with a separator.
+    
+    Args:
+        compressed_files (list): List of tuples containing filename, compressed data, and Huffman tree.
+    
+    Returns:
+        bytes: Concatenated compressed data with separators.
+    """
     concatenated_data = b''
     for filename, compressed_data, huffman_tree in compressed_files:
         file_data = pickle.dumps((filename, compressed_data, huffman_tree))
@@ -27,6 +46,14 @@ def concatenate_compressed_files(compressed_files):
     return concatenated_data
 
 def compress_and_attach(input_folder, png_file, output_file):
+    """
+    Compress all .txt files in the input folder and attach the compressed data to a PNG file.
+    
+    Args:
+        input_folder (str): Path to the folder containing .txt files to compress.
+        png_file (str): Path to the PNG file to attach the compressed data to.
+        output_file (str): Path to save the output PNG file with attached compressed data.
+    """
     compressed_files = compress_files(input_folder)
     concatenated_data = concatenate_compressed_files(compressed_files)
     
@@ -37,6 +64,13 @@ def compress_and_attach(input_folder, png_file, output_file):
     os.remove('temp_compressed.catc')
 
 def extract_and_decompress(input_file, output_folder):
+    """
+    Extract and decompress data from a PNG file.
+    
+    Args:
+        input_file (str): Path to the PNG file containing the compressed data.
+        output_folder (str): Path to save the decompressed .txt files.
+    """
     extracted_file = 'temp_extracted.catc'
     extract_catc_from_png(input_file, extracted_file)
     
@@ -59,6 +93,9 @@ def extract_and_decompress(input_file, output_folder):
     print(f"Files extracted and decompressed to '{output_folder}'.")
 
 def main():
+    """
+    Main function to handle command-line arguments and execute the appropriate mode.
+    """
     parser = argparse.ArgumentParser(description="CatCompression - Custom File Compression Tool")
     parser.add_argument('mode', choices=['catcompress', 'catextract'], help="Mode: catcompress or catextract")
     parser.add_argument('input_folder', help="Input folder path")
