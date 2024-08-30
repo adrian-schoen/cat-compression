@@ -1,7 +1,3 @@
-Here's an updated version of your README to reflect the new features, particularly the handling of multiple input text files and PNGs:
-
----
-
 # CatCompression
 
 ## Work in Progress
