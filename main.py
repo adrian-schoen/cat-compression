@@ -52,28 +52,27 @@ def main():
     args = parser.parse_args()
 
     if args.mode == 'catcompress':
-        input_file = os.path.join(args.input_folder, 'input.txt')
-        if not os.path.exists(input_file):
-            print(f"Error: '{input_file}' does not exist.")
-            return
-        output_file = os.path.join(args.output_folder, 'output_with_catc.png')
-        png_file = os.path.join(args.cat_folder, 'cat.png')
-        compress_and_attach(input_file, png_file, output_file)
-    elif args.mode == 'catextract':
-        input_file = os.path.join(args.input_folder, 'output_with_catc.png')
-        if not os.path.exists(input_file):
-            print(f"Error: '{input_file}' does not exist.")
-            return
-        output_file = os.path.join(args.output_folder, 'decompressed_output.txt')
         png_file = os.path.join(args.cat_folder, 'cat.png')
         if not os.path.exists(png_file):
             print(f"Error: '{png_file}' does not exist.")
             return
-        extract_and_decompress(input_file, output_file)
+
+        for filename in os.listdir(args.input_folder):
+            if filename.endswith('.txt'):
+                input_file = os.path.join(args.input_folder, filename)
+                output_file = os.path.join(args.output_folder, f"{os.path.splitext(filename)[0]}_with_catc.png")
+                compress_and_attach(input_file, png_file, output_file)
+    elif args.mode == 'catextract':
+        png_file = os.path.join(args.cat_folder, 'cat.png')
+        if not os.path.exists(png_file):
+            print(f"Error: '{png_file}' does not exist.")
+            return
+
+        for filename in os.listdir(args.input_folder):
+            if filename.endswith('_with_catc.png'):
+                input_file = os.path.join(args.input_folder, filename)
+                output_file = os.path.join(args.output_folder, f"{os.path.splitext(filename)[0].replace('_with_catc', '')}.txt")
+                extract_and_decompress(input_file, output_file)
 
 if __name__ == "__main__":
     main()
-
-# Example usage:
-# python main.py catcompress input output cat
-# python main.py catextract input output cat
