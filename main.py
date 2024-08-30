@@ -114,13 +114,12 @@ def main() -> None:
         output_file = os.path.join(args.output_folder, 'compressed_with_catc.png')
         compress_and_attach(args.input_folder, png_file, output_file)
     elif args.mode == 'catextract':
-        png_file = os.path.join(args.cat_folder, 'cat.png')
-        if not os.path.exists(png_file):
-            print(f"Error: '{png_file}' does not exist.")
-            return
-
-        input_file = os.path.join(args.input_folder, 'compressed_with_catc.png')
-        extract_and_decompress(input_file, args.output_folder)
+        for filename in os.listdir(args.input_folder):
+            if filename.endswith('.png'):
+                input_file = os.path.join(args.input_folder, filename)
+                output_subfolder = os.path.join(args.output_folder, os.path.splitext(filename)[0])
+                os.makedirs(output_subfolder, exist_ok=True)
+                extract_and_decompress(input_file, output_subfolder)
 
 if __name__ == "__main__":
     main()
