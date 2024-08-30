@@ -1,13 +1,14 @@
 import argparse
 import os
 import pickle
+from typing import List, Tuple
 from huffman import HuffmanCompressor
 from utils import read_file, write_file, attach_to_png, extract_catc_from_png
 
 # Separator used to distinguish between different files in the concatenated data
 FILE_SEPARATOR = b'FILE_SEPARATOR'
 
-def compress_files(input_folder):
+def compress_files(input_folder: str) -> List[Tuple[str, bytes, dict]]:
     """
     Compress all .txt files in the input folder using Huffman compression.
     
@@ -29,7 +30,7 @@ def compress_files(input_folder):
     
     return compressed_files
 
-def concatenate_compressed_files(compressed_files):
+def concatenate_compressed_files(compressed_files: List[Tuple[str, bytes, dict]]) -> bytes:
     """
     Concatenate compressed files with a separator.
     
@@ -45,7 +46,7 @@ def concatenate_compressed_files(compressed_files):
         concatenated_data += file_data + FILE_SEPARATOR
     return concatenated_data
 
-def compress_and_attach(input_folder, png_file, output_file):
+def compress_and_attach(input_folder: str, png_file: str, output_file: str) -> None:
     """
     Compress all .txt files in the input folder and attach the compressed data to a PNG file.
     
@@ -63,7 +64,7 @@ def compress_and_attach(input_folder, png_file, output_file):
     attach_to_png(png_file, 'temp_compressed.catc', output_file)
     os.remove('temp_compressed.catc')
 
-def extract_and_decompress(input_file, output_folder):
+def extract_and_decompress(input_file: str, output_folder: str) -> None:
     """
     Extract and decompress data from a PNG file.
     
@@ -92,7 +93,7 @@ def extract_and_decompress(input_file, output_folder):
     
     print(f"Files extracted and decompressed to '{output_folder}'.")
 
-def main():
+def main() -> None:
     """
     Main function to handle command-line arguments and execute the appropriate mode.
     """
