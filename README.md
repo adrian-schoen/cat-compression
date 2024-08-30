@@ -1,3 +1,7 @@
+Here's an updated version of your README to reflect the new features, particularly the handling of multiple input text files and PNGs:
+
+---
+
 # CatCompression
 
 ## Work in Progress
@@ -10,10 +14,11 @@ CatCompression is a specialized file compression tool that employs Huffman codin
 
 ## Features
 
-- **File Compression:** Compresses input files using Huffman coding.
-- **Data Embedding:** Embeds the compressed data into a PNG image file.
-- **Data Extraction:** Extracts the compressed data from the PNG image file.
+- **File Compression:** Compresses one or more input files using Huffman coding.
+- **Data Embedding:** Embeds the compressed data into a single PNG image file.
+- **Data Extraction:** Extracts the compressed data from one or more PNG image files.
 - **File Decompression:** Decompresses the extracted data back into its original form.
+- **Batch Processing:** Supports handling multiple input text files for compression into a single PNG and multiple PNG files for separate extraction and decompression.
 
 ## Getting Started
 
@@ -45,27 +50,31 @@ Ensure you have Python installed. This project is compatible with Python 3.x.
 
 #### Compress and Attach Data to a PNG
 
-To compress a file and attach the compressed data to a PNG image:
+To compress one or more text files and attach the compressed data to a PNG image:
 
 ```bash
 python main.py catcompress <input_folder> <output_folder> <cat_folder>
 ```
 
-- `<input_folder>`: Folder containing `input.txt` (the file to be compressed).
+- `<input_folder>`: Folder containing one or more `.txt` files to be compressed.
 - `<output_folder>`: Folder where the resulting PNG image with embedded data will be saved.
 - `<cat_folder>`: Folder containing `cat.png` (the image to attach the data to).
 
-#### Extract and Decompress Data from a PNG
+All `.txt` files in the `<input_folder>` will be compressed and concatenated before being embedded into a single PNG file.
 
-To extract and decompress data from a PNG image:
+#### Extract and Decompress Data from PNG(s)
+
+To extract and decompress data from one or more PNG images:
 
 ```bash
 python main.py catextract <input_folder> <output_folder> <cat_folder>
 ```
 
-- `<input_folder>`: Folder containing `output_with_catc.png` (the PNG file with embedded data).
-- `<output_folder>`: Folder where the decompressed file will be saved.
+- `<input_folder>`: Folder containing one or more `.png` files with embedded data.
+- `<output_folder>`: Folder where the decompressed files will be saved.
 - `<cat_folder>`: Folder containing `cat.png` (used for validation).
+
+Each PNG file in the `<input_folder>` will be processed separately, with the decompressed files being saved in a subfolder named after the PNG file (without its extension).
 
 ### Example
 
@@ -73,7 +82,7 @@ python main.py catextract <input_folder> <output_folder> <cat_folder>
 
    Assume you have the following structure:
 
-   - `input/`: Contains `input.txt` (the file to be compressed).
+   - `input/`: Contains `input1.txt`, `input2.txt` (the files to be compressed).
    - `output/`: Empty directory where the result will be saved.
    - `cat/`: Contains `cat.png` (the image used for embedding).
 
@@ -83,17 +92,17 @@ python main.py catextract <input_folder> <output_folder> <cat_folder>
    python main.py catcompress input output cat
    ```
 
-   The compressed data will be attached to `cat.png`, and the resulting image will be saved as `output_with_catc.png` in the `output/` directory.
+   The compressed data from both `input1.txt` and `input2.txt` will be attached to `cat.png`, and the resulting image will be saved as `compressed_with_catc.png` in the `output/` directory.
 
 2. **Extract and Decompress:**
 
-   Use the `output_with_catc.png` from the previous step to extract and decompress:
+   Use the `compressed_with_catc.png` from the previous step, or multiple PNGs in the `input/` folder, to extract and decompress:
 
    ```bash
    python main.py catextract input output cat
    ```
 
-   The extracted and decompressed data will be saved as `decompressed_output.txt` in the `output/` directory.
+   The extracted and decompressed data from each PNG will be saved in separate subfolders within the `output/` directory, named after each PNG file (e.g., `output/compressed_with_catc/`).
 
 ### Notes
 
