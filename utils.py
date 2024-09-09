@@ -1,5 +1,4 @@
 import pickle
-import os
 
 def read_file(file_path, compressed=False):
     if compressed:
