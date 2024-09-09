@@ -31,7 +31,11 @@ Ensure you have Python installed. This project is compatible with Python 3.x.
    cd CatCompression
    ```
 
-2. No additional packages need to be installed. The project uses Python's standard library, so you can run the scripts directly.
+2. Install the required packages:
+
+   ```bash
+   pip install tqdm
+   ```
 
 ### Project Structure
 
@@ -116,4 +120,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ---
 
 Enjoy using CatCompression! Hide your data in plain sight! 🐱
-
