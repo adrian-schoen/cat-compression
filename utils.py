@@ -31,8 +31,6 @@ def attach_to_png(png_file_path, catc_file_path, output_file_path):
     with open(output_file_path, 'wb') as output_file:
         output_file.write(combined_data)
 
-    print(f"Attached '{catc_file_path}' to '{png_file_path}' and saved as '{output_file_path}'.")
-
 def extract_catc_from_png(png_file_path, catc_output_path):
     try:
         with open(png_file_path, 'rb') as file:
@@ -50,8 +48,6 @@ def extract_catc_from_png(png_file_path, catc_output_path):
             # Write the extracted .catc data to a file
             with open(catc_output_path, 'wb') as catc_file:
                 catc_file.write(catc_data)
-
-        print(f"Extracted .catc data from '{png_file_path}' and saved as '{catc_output_path}'.")
 
     except OSError as e:
         print(f"Error: {e}")
