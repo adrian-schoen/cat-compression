@@ -6,9 +6,10 @@ from huffman import HuffmanCompressor
 from utils import read_file, attach_to_png, extract_catc_from_png
 from tqdm import tqdm
 
-# Separator used to distinguish between different files in the concatenated data
+# Constants
 FILE_SEPARATOR = b'FILE_SEPARATOR'
-
+TXT_EXTENSION = '.txt'
+PNG_EXTENSION = '.png'
 ASCII_CAT = r"""
    _____         _      _____                                        _             
   / ____|       | |    / ____|                                      (_)            
@@ -32,13 +33,16 @@ def compress_files(input_folder: str) -> List[Tuple[str, bytes, dict]]:
     """
     compressed_files = []
     compressor = HuffmanCompressor()
-    txt_files = [f for f in os.listdir(input_folder) if f.endswith('.txt')]
+    txt_files = [f for f in os.listdir(input_folder) if f.endswith(TXT_EXTENSION)]
     
     for filename in tqdm(txt_files, desc="Compressing files", unit="file"):
         input_file = os.path.join(input_folder, filename)
-        data = read_file(input_file)
-        compressed_data, huffman_tree = compressor.compress(data)
-        compressed_files.append((filename, compressed_data, huffman_tree))
+        try:
+            data = read_file(input_file)
+            compressed_data, huffman_tree = compressor.compress(data)
+            compressed_files.append((filename, compressed_data, huffman_tree))
+        except Exception as e:
+            print(f"Failed to compress {filename}: {e}")
     
     return compressed_files
 
@@ -72,8 +76,11 @@ def compress_and_attach(input_folder: str, png_file: str, output_file: str) -> N
     compressed_files = compress_files(input_folder)
     concatenated_data = concatenate_compressed_files(compressed_files)
     
-    attach_to_png(png_file, concatenated_data, output_file)
-    print(f"Attached compressed data to '{png_file}' and saved as '{output_file}'.")
+    try:
+        attach_to_png(png_file, concatenated_data, output_file)
+        print(f"Attached compressed data to '{png_file}' and saved as '{output_file}'.")
+    except Exception as e:
+        print(f"Failed to attach compressed data to PNG: {e}")
 
 def extract_and_decompress(input_file: str, output_folder: str) -> None:
     """
@@ -85,18 +92,25 @@ def extract_and_decompress(input_file: str, output_folder: str) -> None:
     """
     print(ASCII_CAT)
     
-    concatenated_data = extract_catc_from_png(input_file)
+    try:
+        concatenated_data = extract_catc_from_png(input_file)
+    except Exception as e:
+        print(f"Failed to extract data from PNG: {e}")
+        return
     
     files_data = concatenated_data.split(FILE_SEPARATOR)
     compressor = HuffmanCompressor()
     
     for file_data in tqdm(files_data, desc="Extracting files", unit="file"):
         if file_data:
-            filename, compressed_data, huffman_tree = pickle.loads(file_data)
-            decompressed_data = compressor.decompress(compressed_data, huffman_tree)
-            output_file = os.path.join(output_folder, filename)
-            with open(output_file, 'wb') as file:
-                file.write(decompressed_data)
+            try:
+                filename, compressed_data, huffman_tree = pickle.loads(file_data)
+                decompressed_data = compressor.decompress(compressed_data, huffman_tree)
+                output_file = os.path.join(output_folder, filename)
+                with open(output_file, 'wb') as file:
+                    file.write(decompressed_data)
+            except Exception as e:
+                print(f"Failed to decompress file data: {e}")
     
     print(f"Extracted data from '{input_file}' to '{output_folder}'.")
 
@@ -121,7 +135,7 @@ def main() -> None:
         output_file = os.path.join(args.output_folder, 'compressed_with_catc.png')
         compress_and_attach(args.input_folder, png_file, output_file)
     elif args.mode == 'extract':
-        png_files = [f for f in os.listdir(args.input_folder) if f.endswith('.png')]
+        png_files = [f for f in os.listdir(args.input_folder) if f.endswith(PNG_EXTENSION)]
         if not png_files:
             print(f"Error: No .png files found in '{args.input_folder}'.")
             return
