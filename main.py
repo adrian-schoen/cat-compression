@@ -8,12 +8,6 @@ from utils import read_file, write_file, attach_to_png, extract_catc_from_png
 # Separator used to distinguish between different files in the concatenated data
 FILE_SEPARATOR = b'FILE_SEPARATOR'
 
-#  /\_/\
-# ( o.o )
-#  > ^ <
-# |\---/|
-# | o_o |
-#  \_^_/
 ASCII_CAT = r"""
    _____         _      _____                                        _             
   / ____|       | |    / ____|                                      (_)            
