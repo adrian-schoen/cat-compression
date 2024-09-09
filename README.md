@@ -34,7 +34,7 @@ Ensure you have Python installed. This project is compatible with Python 3.x.
 2. Install the required packages:
 
    ```bash
-   pip install tqdm
+   pip install -r requirements.txt
    ```
 
 ### Project Structure
