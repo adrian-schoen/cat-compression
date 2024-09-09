@@ -3,7 +3,7 @@ import os
 import pickle
 from typing import List, Tuple
 from huffman import HuffmanCompressor
-from utils import read_file, write_file, attach_to_png, extract_catc_from_png
+from utils import read_file, attach_to_png, extract_catc_from_png
 from tqdm import tqdm
 
 # Separator used to distinguish between different files in the concatenated data
@@ -15,7 +15,7 @@ ASCII_CAT = r"""
  | |            | |_  | |     ___  _ __ ___  _ __  _ __ ___  ___ ___ _  ___  _ __  
  | |      /\_/\ | __| | |    / _ \| '_ ` _ \| '_ \| '__/ _ \/ __/ __| |/ _ \| '_ \ 
  | |____ ( o.o )| |_  | |___| (_) | | | | | | |_) | | |  __/\__ \__ \ | (_) | | | |
-  \_____| > ^ <  \__|  \_____\___/|_| |_| |_| .__/|_|  \___||___/___/_|\___/|_| |_|
+  \_____| > ^ <  \__|  \_____\___/|_| |_| |_| .__/|_|  \___||___/___/_|\___/|_| |_| 
                                             | |                                    
                                             |_|                                    
 """
