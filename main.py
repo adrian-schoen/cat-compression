@@ -4,6 +4,7 @@ import pickle
 from typing import List, Tuple
 from huffman import HuffmanCompressor
 from utils import read_file, write_file, attach_to_png, extract_catc_from_png
+from tqdm import tqdm
 
 # Separator used to distinguish between different files in the concatenated data
 FILE_SEPARATOR = b'FILE_SEPARATOR'
@@ -31,13 +32,13 @@ def compress_files(input_folder: str) -> List[Tuple[str, bytes, dict]]:
     """
     compressed_files = []
     compressor = HuffmanCompressor()
+    txt_files = [f for f in os.listdir(input_folder) if f.endswith('.txt')]
     
-    for filename in os.listdir(input_folder):
-        if filename.endswith('.txt'):
-            input_file = os.path.join(input_folder, filename)
-            data = read_file(input_file)
-            compressed_data, huffman_tree = compressor.compress(data)
-            compressed_files.append((filename, compressed_data, huffman_tree))
+    for filename in tqdm(txt_files, desc="Compressing files", unit="file"):
+        input_file = os.path.join(input_folder, filename)
+        data = read_file(input_file)
+        compressed_data, huffman_tree = compressor.compress(data)
+        compressed_files.append((filename, compressed_data, huffman_tree))
     
     return compressed_files
 
@@ -99,7 +100,7 @@ def extract_and_decompress(input_file: str, output_folder: str) -> None:
     files_data = concatenated_data.split(FILE_SEPARATOR)
     compressor = HuffmanCompressor()
     
-    for file_data in files_data:
+    for file_data in tqdm(files_data, desc="Extracting files", unit="file"):
         if file_data:
             filename, compressed_data, huffman_tree = pickle.loads(file_data)
             decompressed_data = compressor.decompress(compressed_data, huffman_tree)
@@ -107,7 +108,7 @@ def extract_and_decompress(input_file: str, output_folder: str) -> None:
             with open(output_file, 'wb') as file:
                 file.write(decompressed_data)
     
-    print(f"Extracted data from '{input_file} to '{output_folder}'.")
+    print(f"Extracted data from '{input_file}' to '{output_folder}'.")
 
 def main() -> None:
     """
