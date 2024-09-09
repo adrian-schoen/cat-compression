@@ -3,19 +3,22 @@ import os
 import pickle
 from typing import List, Tuple
 from huffman import HuffmanCompressor
-from utils import read_file, write_file, attach_to_png, extract_catc_from_png
+from utils import read_file, attach_to_png, extract_catc_from_png
 from tqdm import tqdm
 
-# Separator used to distinguish between different files in the concatenated data
+# Constants
 FILE_SEPARATOR = b'FILE_SEPARATOR'
+TXT_EXTENSION = '.txt'
+PNG_EXTENSION = '.png'
 
-ASCII_CAT = r"""
+def get_ascii_cat() -> str:
+    return r"""
    _____         _      _____                                        _             
   / ____|       | |    / ____|                                      (_)            
  | |            | |_  | |     ___  _ __ ___  _ __  _ __ ___  ___ ___ _  ___  _ __  
  | |      /\_/\ | __| | |    / _ \| '_ ` _ \| '_ \| '__/ _ \/ __/ __| |/ _ \| '_ \ 
  | |____ ( o.o )| |_  | |___| (_) | | | | | | |_) | | |  __/\__ \__ \ | (_) | | | |
-  \_____| > ^ <  \__|  \_____\___/|_| |_| |_| .__/|_|  \___||___/___/_|\___/|_| |_|
+  \_____| > ^ <  \__|  \_____\___/|_| |_| |_| .__/|_|  \___||___/___/_|\___/|_| |_| 
                                             | |                                    
                                             |_|                                    
 """
@@ -32,13 +35,16 @@ def compress_files(input_folder: str) -> List[Tuple[str, bytes, dict]]:
     """
     compressed_files = []
     compressor = HuffmanCompressor()
-    txt_files = [f for f in os.listdir(input_folder) if f.endswith('.txt')]
+    txt_files = [f for f in os.listdir(input_folder) if f.endswith(TXT_EXTENSION)]
     
     for filename in tqdm(txt_files, desc="Compressing files", unit="file"):
         input_file = os.path.join(input_folder, filename)
-        data = read_file(input_file)
-        compressed_data, huffman_tree = compressor.compress(data)
-        compressed_files.append((filename, compressed_data, huffman_tree))
+        try:
+            data = read_file(input_file)
+            compressed_data, huffman_tree = compressor.compress(data)
+            compressed_files.append((filename, compressed_data, huffman_tree))
+        except Exception as e:
+            print(f"Failed to compress {filename}: {e}")
     
     return compressed_files
 
@@ -67,17 +73,16 @@ def compress_and_attach(input_folder: str, png_file: str, output_file: str) -> N
         png_file (str): Path to the PNG file to attach the compressed data to.
         output_file (str): Path to save the output PNG file with attached compressed data.
     """
-    print(ASCII_CAT)
+    print(get_ascii_cat())
 
     compressed_files = compress_files(input_folder)
     concatenated_data = concatenate_compressed_files(compressed_files)
     
-    with open('temp_compressed.catc', 'wb') as file:
-        file.write(concatenated_data)
-    
-    attach_to_png(png_file, 'temp_compressed.catc', output_file)
-    os.remove('temp_compressed.catc')
-    print(f"Attached compressed data to '{png_file}' and saved as '{output_file}'.")
+    try:
+        attach_to_png(png_file, concatenated_data, output_file)
+        print(f"Attached compressed data to '{png_file}' and saved as '{output_file}'.")
+    except Exception as e:
+        print(f"Failed to attach compressed data to PNG: {e}")
 
 def extract_and_decompress(input_file: str, output_folder: str) -> None:
     """
@@ -87,26 +92,27 @@ def extract_and_decompress(input_file: str, output_folder: str) -> None:
         input_file (str): Path to the PNG file containing the compressed data.
         output_folder (str): Path to save the decompressed .txt files.
     """
-    print(ASCII_CAT)
+    print(get_ascii_cat())
     
-    extracted_file = 'temp_extracted.catc'
-    extract_catc_from_png(input_file, extracted_file)
-    
-    with open(extracted_file, 'rb') as file:
-        concatenated_data = file.read()
-    
-    os.remove(extracted_file)
+    try:
+        concatenated_data = extract_catc_from_png(input_file)
+    except Exception as e:
+        print(f"Failed to extract data from PNG: {e}")
+        return
     
     files_data = concatenated_data.split(FILE_SEPARATOR)
     compressor = HuffmanCompressor()
     
     for file_data in tqdm(files_data, desc="Extracting files", unit="file"):
         if file_data:
-            filename, compressed_data, huffman_tree = pickle.loads(file_data)
-            decompressed_data = compressor.decompress(compressed_data, huffman_tree)
-            output_file = os.path.join(output_folder, filename)
-            with open(output_file, 'wb') as file:
-                file.write(decompressed_data)
+            try:
+                filename, compressed_data, huffman_tree = pickle.loads(file_data)
+                decompressed_data = compressor.decompress(compressed_data, huffman_tree)
+                output_file = os.path.join(output_folder, filename)
+                with open(output_file, 'wb') as file:
+                    file.write(decompressed_data)
+            except Exception as e:
+                print(f"Failed to decompress file data: {e}")
     
     print(f"Extracted data from '{input_file}' to '{output_folder}'.")
 
@@ -115,14 +121,14 @@ def main() -> None:
     Main function to handle command-line arguments and execute the appropriate mode.
     """
     parser = argparse.ArgumentParser(description="CatCompression - Custom File Compression Tool")
-    parser.add_argument('mode', choices=['catcompress', 'catextract'], help="Mode: catcompress or catextract")
+    parser.add_argument('mode', choices=['compress', 'extract'], help="Mode: compress or extract")
     parser.add_argument('input_folder', help="Input folder path")
     parser.add_argument('output_folder', help="Output folder path")
     parser.add_argument('cat_folder', help="Cat folder path containing cat.png")
     
     args = parser.parse_args()
     
-    if args.mode == 'catcompress':
+    if args.mode == 'compress':
         png_file = os.path.join(args.cat_folder, 'cat.png')
         if not os.path.exists(png_file):
             print(f"Error: '{png_file}' does not exist.")
@@ -130,8 +136,8 @@ def main() -> None:
     
         output_file = os.path.join(args.output_folder, 'compressed_with_catc.png')
         compress_and_attach(args.input_folder, png_file, output_file)
-    elif args.mode == 'catextract':
-        png_files = [f for f in os.listdir(args.input_folder) if f.endswith('.png')]
+    elif args.mode == 'extract':
+        png_files = [f for f in os.listdir(args.input_folder) if f.endswith(PNG_EXTENSION)]
         if not png_files:
             print(f"Error: No .png files found in '{args.input_folder}'.")
             return

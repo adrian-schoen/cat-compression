@@ -39,7 +39,7 @@ Ensure you have Python installed. This project is compatible with Python 3.x.
 
 ### Project Structure
 
-- `main.py`: The main script for compressing, attaching, extracting, and decompressing files.
+- `catcompression.py`: The main script for compressing, attaching, extracting, and decompressing files.
 - `utils.py`: Contains utility functions for reading, writing, and handling files.
 - `huffman.py`: Implements Huffman coding for data compression and decompression.
 - `input/`: Directory for storing input files.
@@ -53,7 +53,7 @@ Ensure you have Python installed. This project is compatible with Python 3.x.
 To compress one or more text files and attach the compressed data to a PNG image:
 
 ```bash
-python main.py catcompress <input_folder> <output_folder> <cat_folder>
+python catcompression.py compress <input_folder> <output_folder> <cat_folder>
 ```
 
 - `<input_folder>`: Folder containing one or more `.txt` files to be compressed.
@@ -67,7 +67,7 @@ All `.txt` files in the `<input_folder>` will be compressed and concatenated bef
 To extract and decompress data from one or more PNG images:
 
 ```bash
-python main.py catextract <input_folder> <output_folder> <cat_folder>
+python catcompression.py extract <input_folder> <output_folder> <cat_folder>
 ```
 
 - `<input_folder>`: Folder containing one or more `.png` files with embedded data.
@@ -89,7 +89,7 @@ Each PNG file in the `<input_folder>` will be processed separately, with the dec
    Run:
 
    ```bash
-   python main.py catcompress input output cat
+   python catcompression.py compress input output cat
    ```
 
    The compressed data from both `input1.txt` and `input2.txt` will be attached to `cat.png`, and the resulting image will be saved as `compressed_with_catc.png` in the `output/` directory.
@@ -99,15 +99,11 @@ Each PNG file in the `<input_folder>` will be processed separately, with the dec
    Use the `compressed_with_catc.png` from the previous step, or multiple PNGs in the `input/` folder, to extract and decompress:
 
    ```bash
-   python main.py catextract input output cat
+   python catcompression.py extract input output cat
    ```
 
    The extracted and decompressed data from each PNG will be saved in separate subfolders within the `output/` directory, named after each PNG file (e.g., `output/compressed_with_catc/`).
 
-### Notes
-
-- The `.catc` file is a temporary file created during the compression and attaching process. It is automatically deleted after the operation.
-- Ensure that `cat.png` remains consistent between compression and extraction to avoid errors.
 
 ## Contributing
 
