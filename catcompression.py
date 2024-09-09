@@ -111,14 +111,14 @@ def main() -> None:
     Main function to handle command-line arguments and execute the appropriate mode.
     """
     parser = argparse.ArgumentParser(description="CatCompression - Custom File Compression Tool")
-    parser.add_argument('mode', choices=['catcompress', 'catextract'], help="Mode: catcompress or catextract")
+    parser.add_argument('mode', choices=['compress', 'extract'], help="Mode: compress or extract")
     parser.add_argument('input_folder', help="Input folder path")
     parser.add_argument('output_folder', help="Output folder path")
     parser.add_argument('cat_folder', help="Cat folder path containing cat.png")
     
     args = parser.parse_args()
     
-    if args.mode == 'catcompress':
+    if args.mode == 'compress':
         png_file = os.path.join(args.cat_folder, 'cat.png')
         if not os.path.exists(png_file):
             print(f"Error: '{png_file}' does not exist.")
@@ -126,7 +126,7 @@ def main() -> None:
     
         output_file = os.path.join(args.output_folder, 'compressed_with_catc.png')
         compress_and_attach(args.input_folder, png_file, output_file)
-    elif args.mode == 'catextract':
+    elif args.mode == 'extract':
         png_files = [f for f in os.listdir(args.input_folder) if f.endswith('.png')]
         if not png_files:
             print(f"Error: No .png files found in '{args.input_folder}'.")
