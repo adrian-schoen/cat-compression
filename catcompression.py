@@ -10,7 +10,9 @@ from tqdm import tqdm
 FILE_SEPARATOR = b'FILE_SEPARATOR'
 TXT_EXTENSION = '.txt'
 PNG_EXTENSION = '.png'
-ASCII_CAT = r"""
+
+def get_ascii_cat() -> str:
+    return r"""
    _____         _      _____                                        _             
   / ____|       | |    / ____|                                      (_)            
  | |            | |_  | |     ___  _ __ ___  _ __  _ __ ___  ___ ___ _  ___  _ __  
@@ -71,7 +73,7 @@ def compress_and_attach(input_folder: str, png_file: str, output_file: str) -> N
         png_file (str): Path to the PNG file to attach the compressed data to.
         output_file (str): Path to save the output PNG file with attached compressed data.
     """
-    print(ASCII_CAT)
+    print(get_ascii_cat())
 
     compressed_files = compress_files(input_folder)
     concatenated_data = concatenate_compressed_files(compressed_files)
@@ -90,7 +92,7 @@ def extract_and_decompress(input_file: str, output_folder: str) -> None:
         input_file (str): Path to the PNG file containing the compressed data.
         output_folder (str): Path to save the decompressed .txt files.
     """
-    print(ASCII_CAT)
+    print(get_ascii_cat())
     
     try:
         concatenated_data = extract_catc_from_png(input_file)
