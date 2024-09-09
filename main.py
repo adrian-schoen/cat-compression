@@ -8,6 +8,17 @@ from utils import read_file, write_file, attach_to_png, extract_catc_from_png
 # Separator used to distinguish between different files in the concatenated data
 FILE_SEPARATOR = b'FILE_SEPARATOR'
 
+ASCII_CAT = r"""
+   _____      _      _____                                        _             
+  / ____|    | |    / ____|                                      (_)            
+ | |     __ _| |_  | |     ___  _ __ ___  _ __  _ __ ___  ___ ___ _  ___  _ __  
+ | |    / _` | __| | |    / _ \| '_ ` _ \| '_ \| '__/ _ \/ __/ __| |/ _ \| '_ \ 
+ | |___| (_| | |_  | |___| (_) | | | | | | |_) | | |  __/\__ \__ \ | (_) | | | |
+  \_____\__,_|\__|  \_____\___/|_| |_| |_| .__/|_|  \___||___/___/_|\___/|_| |_|
+                                         | |                                    
+                                         |_|                                    
+"""
+
 def compress_files(input_folder: str) -> List[Tuple[str, bytes, dict]]:
     """
     Compress all .txt files in the input folder using Huffman compression.
@@ -55,6 +66,8 @@ def compress_and_attach(input_folder: str, png_file: str, output_file: str) -> N
         png_file (str): Path to the PNG file to attach the compressed data to.
         output_file (str): Path to save the output PNG file with attached compressed data.
     """
+    print(ASCII_CAT)
+
     compressed_files = compress_files(input_folder)
     concatenated_data = concatenate_compressed_files(compressed_files)
     
@@ -63,6 +76,7 @@ def compress_and_attach(input_folder: str, png_file: str, output_file: str) -> N
     
     attach_to_png(png_file, 'temp_compressed.catc', output_file)
     os.remove('temp_compressed.catc')
+    print(f"Attached compressed data to '{png_file}' and saved as '{output_file}'.")
 
 def extract_and_decompress(input_file: str, output_folder: str) -> None:
     """
@@ -72,6 +86,8 @@ def extract_and_decompress(input_file: str, output_folder: str) -> None:
         input_file (str): Path to the PNG file containing the compressed data.
         output_folder (str): Path to save the decompressed .txt files.
     """
+    print(ASCII_CAT)
+    
     extracted_file = 'temp_extracted.catc'
     extract_catc_from_png(input_file, extracted_file)
     
@@ -91,6 +107,7 @@ def extract_and_decompress(input_file: str, output_folder: str) -> None:
             with open(output_file, 'wb') as file:
                 file.write(decompressed_data)
     
+    print(f"Extracted data from '{input_file}'.")
     print(f"Files extracted and decompressed to '{output_folder}'.")
 
 def main() -> None:
