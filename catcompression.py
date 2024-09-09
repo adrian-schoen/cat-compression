@@ -85,13 +85,7 @@ def extract_and_decompress(input_file: str, output_folder: str) -> None:
     """
     print(ASCII_CAT)
     
-    extracted_file = 'temp_extracted.catc'
-    extract_catc_from_png(input_file, extracted_file)
-    
-    with open(extracted_file, 'rb') as file:
-        concatenated_data = file.read()
-    
-    os.remove(extracted_file)
+    concatenated_data = extract_catc_from_png(input_file)
     
     files_data = concatenated_data.split(FILE_SEPARATOR)
     compressor = HuffmanCompressor()

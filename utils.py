@@ -26,7 +26,7 @@ def attach_to_png(png_file_path, concatenated_data, output_file_path):
     with open(output_file_path, 'wb') as output_file:
         output_file.write(combined_data)
 
-def extract_catc_from_png(png_file_path, catc_output_path):
+def extract_catc_from_png(png_file_path):
     try:
         with open(png_file_path, 'rb') as file:
             # Read the entire file content
@@ -39,10 +39,7 @@ def extract_catc_from_png(png_file_path, catc_output_path):
 
             # Extract the .catc data
             catc_data = file_content[marker_index + len(b'CATC_MARKER'):]
-
-            # Write the extracted .catc data to a file
-            with open(catc_output_path, 'wb') as catc_file:
-                catc_file.write(catc_data)
+            return catc_data
 
     except OSError as e:
         print(f"Error: {e}")
