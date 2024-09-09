@@ -72,11 +72,7 @@ def compress_and_attach(input_folder: str, png_file: str, output_file: str) -> N
     compressed_files = compress_files(input_folder)
     concatenated_data = concatenate_compressed_files(compressed_files)
     
-    with open('temp_compressed.catc', 'wb') as file:
-        file.write(concatenated_data)
-    
-    attach_to_png(png_file, 'temp_compressed.catc', output_file)
-    os.remove('temp_compressed.catc')
+    attach_to_png(png_file, concatenated_data, output_file)
     print(f"Attached compressed data to '{png_file}' and saved as '{output_file}'.")
 
 def extract_and_decompress(input_file: str, output_folder: str) -> None:

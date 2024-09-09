@@ -15,17 +15,13 @@ def write_file(file_path, compressed_data, huffman_tree):
     with open(file_path, 'wb') as file:
         pickle.dump((compressed_data, huffman_tree), file)
 
-def attach_to_png(png_file_path, catc_file_path, output_file_path):
+def attach_to_png(png_file_path, concatenated_data, output_file_path):
     # Read the .png file content
     with open(png_file_path, 'rb') as png_file:
         png_data = png_file.read()
 
-    # Read the .catc file content
-    with open(catc_file_path, 'rb') as catc_file:
-        catc_data = catc_file.read()
-
-    # Combine .png data with .catc data
-    combined_data = png_data + b'CATC_MARKER' + catc_data
+    # Combine .png data with concatenated data
+    combined_data = png_data + b'CATC_MARKER' + concatenated_data
 
     # Write the combined data to the output .png file
     with open(output_file_path, 'wb') as output_file:
