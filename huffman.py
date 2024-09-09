@@ -1,38 +1,47 @@
 import heapq
 from collections import Counter
+from typing import Dict, Tuple, Optional
 
 class HuffmanNode:
-    def __init__(self, char, freq):
+    def __init__(self, char: Optional[str], freq: int) -> None:
         """
         Initialize a HuffmanNode with a character and its frequency.
+        
+        Args:
+            char (Optional[str]): The character represented by the node.
+            freq (int): The frequency of the character.
         """
         self.char = char
         self.freq = freq
-        self.left = None
-        self.right = None
+        self.left: Optional[HuffmanNode] = None
+        self.right: Optional[HuffmanNode] = None
 
-    def __lt__(self, other):
+    def __lt__(self, other: 'HuffmanNode') -> bool:
         """
         Less-than comparison based on frequency for priority queue.
+        
+        Args:
+            other (HuffmanNode): The other node to compare against.
+        
+        Returns:
+            bool: True if this node's frequency is less than the other node's frequency.
         """
         return self.freq < other.freq
 
 class HuffmanCompressor:
-    def build_tree(self, frequency):
+    def build_tree(self, frequency: Dict[str, int]) -> HuffmanNode:
         """
         Build the Huffman tree based on character frequencies.
         
         Args:
-            frequency (dict): A dictionary with characters as keys and their frequencies as values.
+            frequency (Dict[str, int]): A dictionary with characters as keys and their frequencies as values.
         
         Returns:
             HuffmanNode: The root node of the Huffman tree.
         """
-        # Create a priority queue (min-heap) with initial nodes
         heap = [HuffmanNode(char, freq) for char, freq in frequency.items()]
         heapq.heapify(heap)
         
-        # Merge nodes until only one tree remains
         while len(heap) > 1:
             left = heapq.heappop(heap)
             right = heapq.heappop(heap)
@@ -43,7 +52,7 @@ class HuffmanCompressor:
         
         return heap[0]
 
-    def build_codes(self, root):
+    def build_codes(self, root: HuffmanNode) -> Dict[str, str]:
         """
         Generate Huffman codes for each character based on the Huffman tree.
         
@@ -51,12 +60,11 @@ class HuffmanCompressor:
             root (HuffmanNode): The root node of the Huffman tree.
         
         Returns:
-            dict: A dictionary with characters as keys and their Huffman codes as values.
+            Dict[str, str]: A dictionary with characters as keys and their Huffman codes as values.
         """
         codes = {}
         
-        # Recursive function to generate Huffman codes
-        def _generate_codes(node, current_code):
+        def _generate_codes(node: HuffmanNode, current_code: str) -> None:
             if node is None:
                 return
             if node.char is not None:
@@ -68,7 +76,7 @@ class HuffmanCompressor:
         _generate_codes(root, "")
         return codes
 
-    def compress(self, data):
+    def compress(self, data: str) -> Tuple[bytearray, HuffmanNode]:
         """
         Compress the input data using Huffman coding.
         
@@ -76,19 +84,14 @@ class HuffmanCompressor:
             data (str): The input string to be compressed.
         
         Returns:
-            tuple: A tuple containing the compressed data as a bytearray and the Huffman tree.
+            Tuple[bytearray, HuffmanNode]: A tuple containing the compressed data as a bytearray and the Huffman tree.
         """
-        # Calculate frequency of each character
         frequency = Counter(data)
-        # Build Huffman tree
         huffman_tree = self.build_tree(frequency)
-        # Generate Huffman codes
         huffman_codes = self.build_codes(huffman_tree)
         
-        # Encode data using Huffman codes
         encoded_data = "".join(huffman_codes[char] for char in data)
         
-        # Convert the encoded string to bytes using bit-packing
         byte_array = bytearray()
         current_byte = 0
         bits_filled = 0
@@ -101,14 +104,13 @@ class HuffmanCompressor:
                 current_byte = 0
                 bits_filled = 0
         
-        # Append the last byte if there are remaining bits
         if bits_filled > 0:
             current_byte = current_byte << (8 - bits_filled)
             byte_array.append(current_byte)
         
         return byte_array, huffman_tree
 
-    def decompress(self, byte_array, huffman_tree):
+    def decompress(self, byte_array: bytearray, huffman_tree: HuffmanNode) -> bytearray:
         """
         Decompress the input bytearray using the Huffman tree.
         
@@ -122,7 +124,6 @@ class HuffmanCompressor:
         current_node = huffman_tree
         decoded_data = bytearray()
         
-        # Decode the encoded string using the Huffman tree
         for byte in byte_array:
             bits = f"{byte:08b}"
             for bit in bits:
