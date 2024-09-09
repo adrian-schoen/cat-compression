@@ -107,8 +107,7 @@ def extract_and_decompress(input_file: str, output_folder: str) -> None:
             with open(output_file, 'wb') as file:
                 file.write(decompressed_data)
     
-    print(f"Extracted data from '{input_file}'.")
-    print(f"Files extracted and decompressed to '{output_folder}'.")
+    print(f"Extracted data from '{input_file} to '{output_folder}'.")
 
 def main() -> None:
     """
